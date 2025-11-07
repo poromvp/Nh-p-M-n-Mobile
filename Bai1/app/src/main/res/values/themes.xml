@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Bai_1" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+
+    </style>
+</resources>

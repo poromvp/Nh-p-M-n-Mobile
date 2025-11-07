@@ -1,0 +1,20 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#22000000"> <!-- Hiệu ứng ripple mờ khi nhấn -->
+
+    <!-- Nội dung nút -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Màu nền -->
+            <solid android:color="?attr/colorPrimary" /> <!-- Xanh đậm -->
+
+            <!-- Bo góc -->
+            <corners android:radius="25dp" />
+
+            <!-- Viền đỏ (bình thường và khi nhấn đều giữ nguyên) -->
+            <stroke
+                android:width="2dp"
+                android:color="#FF3B30" /> <!-- Viền đỏ tươi -->
+        </shape>
+    </item>
+
+</ripple>
