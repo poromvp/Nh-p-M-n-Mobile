@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Profile của Dư</string>
+
+
+<!--main activity-->
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
+    <string name="footer">Made by @dutran and @dang</string>
+    <string name="dark_mode">Theme</string>
+    <string name="language">Languages</string>
+    <string name="change">Change profile</string>
+
+<!--    edit activity-->
+    <string name="Change_Profile">Change Profile</string>
+    <string name="Change_Avatar">Change Avatar</string>
+    <string name="Full_name">Full name</string>
+    <string name="Email">Email</string>
+    <string name="Save">Save</string>
+
+<!--    Languages-->
+    <string name="Language">Languages</string>
+    <string name="English">English</string>
+    <string name="Vietnamese">Vietnamese</string>
+
+<!--    theme-->
+    <string name="d_m">Dark mode</string>
+
+
+</resources>

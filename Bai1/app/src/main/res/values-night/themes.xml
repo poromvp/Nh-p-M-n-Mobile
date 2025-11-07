@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Bai_1" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorSurface">#121212</item>
+        <item name="colorPrimary">#000000</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorOnSurface">#000000</item>
+
+    </style>
+</resources>
