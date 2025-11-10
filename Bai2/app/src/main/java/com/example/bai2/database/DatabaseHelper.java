@@ -1,5 +1,6 @@
 package com.example.bai2.database;
 
+import android.annotation.SuppressLint;
 import android.content.*;
 import android.database.*;
 import android.database.sqlite.*;
@@ -34,13 +35,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void addCustomer(String phone, String name, int points) {
         SQLiteDatabase db = getWritableDatabase();
-//        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         ContentValues v = new ContentValues();
         v.put("phone", phone);
         v.put("name", name);
         v.put("points", points);
-//        v.put("createdAt", now);
-//        v.put("updatedAt", now);
+        v.put("createdAt", now);
+        v.put("updatedAt", now);
         db.insert("customers", null, v);
     }
 
@@ -63,12 +64,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT points FROM customers WHERE phone=?", new String[]{phone});
         if (c.moveToFirst()) {
             int newPoints = c.getInt(0) + addPoints;
-            String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            @SuppressLint("SimpleDateFormat") String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             ContentValues v = new ContentValues();
             v.put("points", newPoints);
             v.put("updatedAt", now);
             db.update("customers", v, "phone=?", new String[]{phone});
         }
         c.close();
+    }
+
+    @SuppressLint("Range")
+    public Customer getCustomerByPhone(String phone) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM customers WHERE phone = ? LIMIT 1", new String[]{phone});
+
+        Customer customer = null;
+
+        if (c.moveToFirst()) {
+            String name = c.getString(c.getColumnIndexOrThrow("name"));
+            int points = c.getInt(c.getColumnIndexOrThrow("points"));
+            String createdAt = c.getString(c.getColumnIndexOrThrow("createdAt"));
+            String updatedAt = c.getString(c.getColumnIndexOrThrow("updatedAt"));
+
+            // Giả sử constructor của Customer là (phone, name, points, createdAt, updatedAt)
+            customer = new Customer(phone, name, points, createdAt, updatedAt);
+        }
+
+        c.close();
+        db.close();
+        return customer; // Sẽ trả về null nếu không tìm thấy
     }
 }

@@ -19,7 +19,6 @@
         android:padding="12dp"
         android:gravity="center_vertical">
 
-        <!-- Avatar ký tự đầu tiên (chữ cái đầu của tên KH) -->
         <TextView
             android:id="@+id/tvAvatar"
             android:layout_width="48dp"
@@ -32,7 +31,6 @@
             android:textSize="20sp"
             android:background="@drawable/bg_circle_avatar" />
 
-        <!-- Phần thông tin khách hàng -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -56,9 +54,26 @@
                 android:textColor="#555555"
                 android:textSize="14sp"
                 android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/tvCreatedAt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tạo: 2025-11-10 16:30:00"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvUpdatedAt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cập nhật: 2025-11-10 16:30:00"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
 
-        <!-- Ô điểm nổi bật bên phải -->
         <TextView
             android:id="@+id/tvPoints"
             android:layout_width="wrap_content"
