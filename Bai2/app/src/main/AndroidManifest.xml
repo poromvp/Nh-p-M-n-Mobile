@@ -24,6 +24,16 @@
         <activity android:name=".MainActivity" android:exported="false" />
         <activity android:name=".AddCustomerActivity" android:exported="false" />
         <activity android:name=".UpdatePointsActivity" android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PATH"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

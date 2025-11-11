@@ -42,19 +42,19 @@
     <EditText
         android:id="@+id/edtPoints"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
         android:hint="Nhập điểm ban đầu"
-        android:inputType="number"
-        android:layout_marginTop="16dp"/>
+        android:inputType="number" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="77dp"
+        android:backgroundTint="@color/teal_700"
+        android:elevation="4dp"
         android:text="Lưu khách hàng"
         android:textAllCaps="false"
-        android:textSize="16sp"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/teal_700"
-        android:elevation="4dp" />
+        android:textSize="16sp" />
 </LinearLayout>

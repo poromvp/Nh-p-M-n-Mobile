@@ -7,6 +7,10 @@ public class Customer {
     private String createdAt;
     private String updatedAt;
 
+    public Customer() {
+
+    }
+
     public Customer(String phone, String name, int points, String createdAt, String updatedAt) {
         this.phone = phone;
         this.name = name;
