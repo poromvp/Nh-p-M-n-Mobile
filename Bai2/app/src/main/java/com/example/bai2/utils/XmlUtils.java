@@ -1,10 +1,11 @@
-package com.example.bai2.utils; // Thay đổi package nếu cần
+package com.example.bai2.utils; // (Package của bạn)
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 
-import com.example.bai2.model.Customer; // Import model Customer
+import com.example.bai2.model.Customer;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 import java.io.File;
@@ -26,21 +27,27 @@ public class XmlUtils {
     private static final String TAG_UPDATED_AT = "updatedAt";
 
     /**
-     * Ghi danh sách Customer ra file XML trong bộ nhớ cache của ứng dụng
+     * HÀM NÀY BÂY GIỜ ĐÃ ĐẦY ĐỦ LOGIC
+     * Ghi danh sách Customer ra file XML trong thư mục Downloads/Bai2
      * @param context Context
      * @param customers Danh sách khách hàng
      * @return File XML đã được ghi, hoặc null nếu lỗi
      */
-    public static File writeXmlToCache(Context context, List<Customer> customers) {
+    public static File writeXmlToDownloads(Context context, List<Customer> customers) {
         try {
-            // Tạo một file trong thư mục cache con
-            File cacheDir = new File(context.getCacheDir(), "xml");
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs();
+            // 1. Lấy thư mục Downloads bên ngoài (nhưng vẫn của riêng app)
+            File baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+            // 2. Tạo thư mục con "Bai2" (giống ý bạn)
+            File appDir = new File(baseDir, "Bai2");
+            if (!appDir.exists()) {
+                appDir.mkdirs();
             }
 
-            File file = new File(cacheDir, "customers_export.xml");
+            // 3. Tạo file trong thư mục đó
+            File file = new File(appDir, "customers_export.xml");
 
+            // 4. (CODE ĐÃ ĐƯỢC THÊM LẠI)
             // Tạo String XML
             StringWriter stringWriter = new StringWriter();
             XmlSerializer serializer = Xml.newSerializer();
@@ -66,9 +73,10 @@ public class XmlUtils {
             serializer.endTag(null, TAG_CUSTOMERS);
             serializer.endDocument(); // Kết thúc tài liệu
 
+            // 5. (CODE ĐÃ ĐƯỢC THÊM LẠI)
             // Ghi String vào file
             FileOutputStream fos = new FileOutputStream(file);
-            fos.write(stringWriter.toString().getBytes());
+            fos.write(stringWriter.toString().getBytes()); // Bây giờ stringWriter đã có dữ liệu
             fos.close();
 
             Log.d(TAG, "XML file written successfully to: " + file.getAbsolutePath());
@@ -82,8 +90,7 @@ public class XmlUtils {
 
     /**
      * Đọc file XML từ một FileInputStream (để Import)
-     * @param inputStream Dữ liệu từ file người dùng chọn
-     * @return Danh sách khách hàng
+     * (Hàm này giữ nguyên, không thay đổi)
      */
     public static List<Customer> parseCustomersXml(FileInputStream inputStream) {
         List<Customer> customers = new ArrayList<>();
@@ -143,7 +150,7 @@ public class XmlUtils {
     }
 
 
-    // Hàm tiện ích
+    // Hàm tiện ích (Giữ nguyên)
     private static void writeXmlTag(XmlSerializer serializer, String tagName, String text) throws Exception {
         if (text == null) text = ""; // Tránh lỗi NullPointerException
         serializer.startTag(null, tagName);

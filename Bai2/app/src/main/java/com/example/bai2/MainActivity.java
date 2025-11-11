@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // 3. Logic EXPORT
+    //Logic EXPORT
     private void exportCustomers() {
         // Lấy danh sách khách hàng
         List<Customer> customers = db.getAll();
@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Dùng XmlUtils để tạo file
-        File xmlFile = XmlUtils.writeXmlToCache(this, customers);
+        File xmlFile = XmlUtils.writeXmlToDownloads(this, customers);
 
         if (xmlFile == null) {
             Toast.makeText(this, "Lỗi khi tạo file XML", Toast.LENGTH_SHORT).show();
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(emailIntent, "Chọn ứng dụng Email:"));
     }
 
-    // 4. Logic IMPORT (Mở trình chọn tệp)
+    //Logic IMPORT (Mở trình chọn tệp)
     private void importCustomers() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
     }
 
-    // 5. Nhận kết quả file IMPORT về
+    //Nhận kết quả file IMPORT về
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
