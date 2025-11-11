@@ -94,4 +94,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return customer; // Sẽ trả về null nếu không tìm thấy
     }
+
+    /**
+     * Thêm hoặc cập nhật (Upsert) một danh sách khách hàng.
+     * Nếu SĐT đã tồn tại, nó sẽ cập nhật; nếu chưa, nó sẽ thêm mới.
+     */
+    public void upsertCustomers(List<Customer> customers) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Dùng transaction để tăng tốc độ nếu import file lớn
+        db.beginTransaction();
+        try {
+            for (Customer c : customers) {
+                ContentValues v = new ContentValues();
+                v.put("phone", c.getPhone());
+                v.put("name", c.getName());
+                v.put("points", c.getPoints());
+                v.put("createdAt", c.getCreatedAt());
+                v.put("updatedAt", c.getUpdatedAt());
+
+                // Hàm này sẽ TỰ ĐỘNG thay thế (REPLACE) nếu "phone" đã tồn tại
+                db.insertWithOnConflict("customers", null, v, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful(); // Đánh dấu là thành công
+        } finally {
+            db.endTransaction(); // Kết thúc transaction
+            db.close();
+        }
+    }
+
+    /**
+     * Xóa một khách hàng khỏi database dựa trên SĐT (Primary Key)
+     * @param phone Số điện thoại của khách hàng cần xóa
+     */
+    public void deleteCustomer(String phone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            // Hàm delete trả về số dòng đã bị xóa
+            db.delete("customers", "phone = ?", new String[]{phone});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
 }

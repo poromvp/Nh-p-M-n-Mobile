@@ -2,17 +2,22 @@ package com.example.bai2.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent; // <-- THÊM IMPORT NÀY
+import android.content.Intent;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bai2.R;
-import com.example.bai2.UpdatePointsActivity; // <-- THÊM IMPORT NÀY
+import com.example.bai2.UpdatePointsActivity;
+import com.example.bai2.database.DatabaseHelper;
 import com.example.bai2.model.Customer;
 import java.util.List;
 
@@ -20,17 +25,19 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     private final Context context;
     private final List<Customer> customers;
 
-    public CustomerAdapter(Context context, List<Customer> customers) {
+    //THÊM BIẾN DATABASEHELPER
+    private final DatabaseHelper db;
+
+    public CustomerAdapter(Context context, List<Customer> customers, DatabaseHelper db) {
         this.context = context;
         this.customers = customers;
+        this.db = db; // <-- Gán DB
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvPhone, tvPoints;
-        CardView card;
-
-        //THÊM 2 BIẾN TEXTVIEW MỚI
+        TextView tvName, tvPhone, tvPoints, tvAvatar;
         TextView tvCreatedAt, tvUpdatedAt;
+        CardView card;
 
         public ViewHolder(View v) {
             super(v);
@@ -38,8 +45,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
             tvName = v.findViewById(R.id.tvName);
             tvPhone = v.findViewById(R.id.tvPhone);
             tvPoints = v.findViewById(R.id.tvPoints);
-
-            //ÁNH XẠ 2 TEXTVIEW MỚI (PHẢI TRÙNG ID TRONG XML)
+            tvAvatar = v.findViewById(R.id.tvAvatar);
             tvCreatedAt = v.findViewById(R.id.tvCreatedAt);
             tvUpdatedAt = v.findViewById(R.id.tvUpdatedAt);
         }
@@ -57,33 +63,56 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     public void onBindViewHolder(ViewHolder h, int pos) {
         Customer c = customers.get(pos);
 
-        //GÁN DỮ LIỆU CŨ
-        h.tvName.setText(c.getName());
+        String customerName = c.getName();
+        if (customerName != null && !customerName.isEmpty()) {
+            h.tvAvatar.setText(customerName.substring(0, 1).toUpperCase());
+        } else {
+            h.tvAvatar.setText("#");
+        }
+        h.tvName.setText(customerName);
         h.tvPhone.setText("📞 " + c.getPhone());
         h.tvPoints.setText(c.getPoints() + " điểm");
+        h.tvCreatedAt.setText("Tạo: " + (c.getCreatedAt() != null ? c.getCreatedAt() : "N/A"));
+        h.tvUpdatedAt.setText("Cập nhật: " + (c.getUpdatedAt() != null ? c.getUpdatedAt() : "N/A"));
 
-        //GÁN DỮ LIỆU NGÀY THÁNG
-        if (c.getCreatedAt() != null) {
-            h.tvCreatedAt.setText("Tạo: " + c.getCreatedAt());
-        } else {
-            h.tvCreatedAt.setText("Tạo: (N/A)");
-        }
-
-        if (c.getUpdatedAt() != null) {
-            h.tvUpdatedAt.setText("Cập nhật: " + c.getUpdatedAt());
-        } else {
-            h.tvUpdatedAt.setText("Cập nhật: (N/A)");
-        }
-
-        //SỬA HÀM ONCLICK ĐỂ MỞ ACTIVITY MỚI
+        // (Code nhấn để SỬA của bạn)
         h.card.setOnClickListener(v -> {
-            // Toast.makeText(context, "Khách " + c.getName(), Toast.LENGTH_SHORT).show(); // BỎ DÒNG CŨ NÀY
-
-            // THÊM LOGIC MỚI:
             Intent intent = new Intent(context, UpdatePointsActivity.class);
-            // Gửi SĐT của khách hàng này qua màn hình Update
             intent.putExtra("CUSTOMER_PHONE", c.getPhone());
             context.startActivity(intent);
+        });
+
+        //THÊM LOGIC NHẤN GIỮ (LONG PRESS) ĐỂ XÓA
+        h.card.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Lấy vị trí item hiện tại
+                int currentPosition = h.getAdapterPosition();
+
+                // Hiển thị hộp thoại xác nhận
+                new AlertDialog.Builder(context)
+                        .setTitle("Xác nhận xóa")
+                        .setMessage("Bạn có chắc muốn xóa khách hàng: " + c.getName() + "?")
+                        .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 1. Gọi hàm xóa khỏi Database
+                                db.deleteCustomer(c.getPhone());
+
+                                // 2. Xóa khỏi danh sách (List) trong Adapter
+                                customers.remove(currentPosition);
+
+                                // 3. Báo cho RecyclerView biết item đã bị xóa
+                                notifyItemRemoved(currentPosition);
+
+                                Toast.makeText(context, "Đã xóa khách hàng: " + c.getName(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Hủy", null) // Nút "Hủy" không làm gì cả
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+                return true; // Đã xử lý sự kiện
+            }
         });
     }
 
