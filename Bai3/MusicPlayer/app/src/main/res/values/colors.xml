@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Colors -->
+    <color name="md_theme_primary">#4CAF50</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#C8E6C9</color>
+    <color name="md_theme_onPrimaryContainer">#1B5E20</color>
+
+    <color name="md_theme_secondary">#2196F3</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+
+    <!-- Other colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
