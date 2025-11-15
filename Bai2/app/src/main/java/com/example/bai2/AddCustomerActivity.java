@@ -50,12 +50,17 @@ public class AddCustomerActivity extends AppCompatActivity {
                 edtPhone.setText("");
                 edtName.setText("");
                 edtPhone.requestFocus();
-                // 6. Xoá (clear) cả ô điểm
+                // 6. Xoá cả ô điểm
                 edtPoints.setText("");
                 edtPhone.requestFocus();
             } catch (Exception e) {
                 Snackbar.make(v, "❌ Số điện thoại đã tồn tại!", Snackbar.LENGTH_SHORT).show();
             }
+        });
+
+        Button btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            finish(); // Đóng Activity này và quay lại MainActivity
         });
     }
 }

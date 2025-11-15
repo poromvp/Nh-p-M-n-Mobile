@@ -1,40 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center_horizontal"
     android:background="#F2F5FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Ô nhập số điện thoại -->
-    <EditText
-        android:id="@+id/edtPhone"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nhập số điện thoại"
-        android:inputType="phone"
-        android:drawableStart="@android:drawable/ic_menu_call"
-        android:backgroundTint="@color/purple_700"
-        android:layout_marginBottom="12dp"
-        android:padding="10dp"/>
-
-    <!-- Nút tìm khách hàng -->
-    <Button
-        android:id="@+id/btnSearch"
-        android:text="Tìm khách hàng"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/purple_500"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Cập nhật điểm của khách hàng"
+            app:titleTextColor="@android:color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Phần hiển thị thông tin khách hàng -->
     <LinearLayout
         android:id="@+id/layoutInfo"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +35,7 @@
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tên khách hàng:"
+            android:text="@string/t_n_kh_ch_h_ng"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="4dp" />
@@ -55,7 +44,7 @@
             android:id="@+id/tvPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Điểm hiện tại: 0"
+            android:text="@string/i_m_hi_n_t_i_0"
             android:textColor="@color/purple_700"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -67,7 +56,7 @@
             android:id="@+id/edtChange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập số điểm muốn cộng hoặc trừ"
+            android:hint="@string/nh_p_s_i_m_mu_n_c_ng_ho_c_tr"
             android:inputType="number"
             android:padding="10dp"
             android:backgroundTint="@color/purple_500"/>
@@ -82,23 +71,31 @@
 
             <Button
                 android:id="@+id/btnAddPoints"
-                android:text="➕ Cộng điểm"
+                android:text="@string/c_ng_i_m"
                 android:layout_marginEnd="8dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/teal_700"
+                android:backgroundTint="@color/purple_500"
                 android:textColor="@android:color/white"/>
 
             <Button
                 android:id="@+id/btnSubtractPoints"
-                android:text="➖ Trừ điểm"
+                android:text="@string/tr_i_m"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/holo_red_light"
+                android:backgroundTint="@color/purple_500"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quay_l_i"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#BDBDBD"
+        android:textColor="@android:color/black"/>
 </LinearLayout>

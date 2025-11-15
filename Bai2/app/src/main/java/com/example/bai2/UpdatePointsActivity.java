@@ -1,20 +1,22 @@
 package com.example.bai2;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.bai2.database.DatabaseHelper;
 import com.example.bai2.model.Customer;
 import com.google.android.material.snackbar.Snackbar;
 
+// (Không cần import Toolbar nữa vì layout mới không dùng)
+
 public class UpdatePointsActivity extends AppCompatActivity {
-    EditText edtPhone, edtChange;
+    // Không còn edtPhone hay btnSearch
+    EditText edtChange;
     TextView tvName, tvPoints;
-    Button btnAddPoints, btnSubtractPoints;
-    LinearLayout layoutInfo;
+    Button btnAddPoints, btnSubtractPoints, btnBack; // Thêm btnBack
     DatabaseHelper db;
     Customer currentCustomer;
 
@@ -23,88 +25,59 @@ public class UpdatePointsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_points);
 
+        // --- 1. Ánh xạ các view ---
         db = new DatabaseHelper(this);
-        edtPhone = findViewById(R.id.edtPhone);
         edtChange = findViewById(R.id.edtChange);
         tvName = findViewById(R.id.tvName);
         tvPoints = findViewById(R.id.tvPoints);
         btnAddPoints = findViewById(R.id.btnAddPoints);
         btnSubtractPoints = findViewById(R.id.btnSubtractPoints);
-        layoutInfo = findViewById(R.id.layoutInfo);
+        btnBack = findViewById(R.id.btnBack); // Ánh xạ nút Back
 
-        layoutInfo.setVisibility(View.GONE);
+        // --- 2. Nhận SĐT được gửi từ FindCustomerActivity ---
+        String phone = getIntent().getStringExtra("CUSTOMER_PHONE");
 
-        // Thêm TextWatcher để tự động tìm
-        edtPhone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                searchCustomer(s.toString());
-            }
-        });
-
-        // Tách riêng logic cộng/trừ
-        btnAddPoints.setOnClickListener(v -> performAddPoints());
-        btnSubtractPoints.setOnClickListener(v -> performUsePoints());
-
-        // === THÊM CODE MỚI: TỰ ĐỘNG NHẬN SĐT KHI MỞ ===
-        checkIntentForPhone();
-        // ============================================
-    }
-
-    // === THÊM HÀM MỚI NÀY VÀO ===
-    /**
-     * Kiểm tra xem Activity có được mở kèm SĐT từ MainActivity không.
-     * Nếu có, tự động điền SĐT và tìm khách hàng.
-     */
-    private void checkIntentForPhone() {
-        // Kiểm tra xem có SĐT nào được gửi qua với key "CUSTOMER_PHONE" không
-        if (getIntent().hasExtra("CUSTOMER_PHONE")) {
-            String phone = getIntent().getStringExtra("CUSTOMER_PHONE");
-            if (phone != null && !phone.isEmpty()) {
-                // 1. Tự điền SĐT vào ô EditText
-                edtPhone.setText(phone);
-
-                // 2. Tự động "Tìm kiếm"
-                // (Hàm searchCustomer đã được gọi bởi TextWatcher ở trên)
-                // Nếu bạn muốn chắc chắn, có thể gọi lại:
-                // searchCustomer(phone);
-            }
-        }
-    }
-    // =============================
-
-    // Hàm tìm khách hàng (tối ưu, dùng getCustomerByPhone)
-    private void searchCustomer(String phone) {
-        if (phone.trim().isEmpty()) {
-            layoutInfo.setVisibility(View.GONE);
-            currentCustomer = null;
+        // Kiểm tra SĐT (rất quan trọng)
+        if (phone == null || phone.isEmpty()) {
+            Toast.makeText(this, "Lỗi: Không nhận được SĐT khách hàng.", Toast.LENGTH_SHORT).show();
+            finish(); // Đóng activity nếu không có SĐT
             return;
         }
 
-        // Tối ưu: Chỉ tìm 1 khách hàng
-        currentCustomer = db.getCustomerByPhone(phone.trim());
+        // --- 3. Tải thông tin khách hàng (chỉ 1 lần) ---
+        loadCustomerInfo(phone);
 
+        // --- 4. Gán sự kiện cho các nút ---
+        btnAddPoints.setOnClickListener(v -> performAddPoints());
+        btnSubtractPoints.setOnClickListener(v -> performUsePoints());
+        btnBack.setOnClickListener(v -> {
+            finish(); // Nút Back chỉ cần đóng Activity
+        });
+    }
+
+    /**
+     * Tải thông tin khách hàng từ DB và cập nhật UI
+     */
+    private void loadCustomerInfo(String phone) {
+        currentCustomer = db.getCustomerByPhone(phone.trim());
         if (currentCustomer == null) {
-            layoutInfo.setVisibility(View.GONE);
+            Toast.makeText(this, "Lỗi: Không tìm thấy khách hàng.", Toast.LENGTH_SHORT).show();
+            finish();
         } else {
-            layoutInfo.setVisibility(View.VISIBLE);
+            // Hiển thị thông tin lên
             tvName.setText("Tên: " + currentCustomer.getName());
             tvPoints.setText("Điểm hiện tại: " + currentCustomer.getPoints());
         }
     }
 
-    // Hàm cộng điểm
+    // (Không còn hàm searchCustomer() hay checkIntentForPhone() nữa)
+
+    /**
+     * Hàm xử lý cộng điểm
+     */
     private void performAddPoints() {
-        if (currentCustomer == null) {
-            showSnack("Không tìm thấy khách hàng với SĐT này");
-            return;
-        }
+        if (currentCustomer == null) return;
+
         String val = edtChange.getText().toString().trim();
         if (val.isEmpty()) {
             showSnack("Nhập số điểm cần cộng");
@@ -116,15 +89,17 @@ public class UpdatePointsActivity extends AppCompatActivity {
 
         showSnack("Đã cộng điểm thành công 🎉");
         edtChange.setText("");
-        searchCustomer(currentCustomer.getPhone());
+
+        // Tải lại thông tin điểm mới nhất
+        loadCustomerInfo(currentCustomer.getPhone());
     }
 
-    // Hàm trừ điểm
+    /**
+     * Hàm xử lý trừ điểm
+     */
     private void performUsePoints() {
-        if (currentCustomer == null) {
-            showSnack("Không tìm thấy khách hàng với SĐT này");
-            return;
-        }
+        if (currentCustomer == null) return;
+
         String val = edtChange.getText().toString().trim();
         if (val.isEmpty()) {
             showSnack("Nhập số điểm cần trừ");
@@ -133,8 +108,9 @@ public class UpdatePointsActivity extends AppCompatActivity {
 
         int pointsToUse = Integer.parseInt(val);
 
+        // Kiểm tra điểm
         if (currentCustomer.getPoints() < pointsToUse) {
-            showSnack("Không đủ điểm để trừ!");
+            showSnack("Không được nhập điểm trừ cao hơn điểm hiện tại!");
             return;
         }
 
@@ -142,10 +118,14 @@ public class UpdatePointsActivity extends AppCompatActivity {
 
         showSnack("Đã trừ điểm thành công");
         edtChange.setText("");
-        searchCustomer(currentCustomer.getPhone());
+
+        // Tải lại thông tin điểm mới nhất
+        loadCustomerInfo(currentCustomer.getPhone());
     }
 
-
+    /**
+     * Hàm tiện ích hiển thị Snackbar
+     */
     private void showSnack(String msg) {
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
     }

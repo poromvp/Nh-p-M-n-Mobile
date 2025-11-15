@@ -138,4 +138,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+    /**
+     * Tìm một khách hàng bằng SĐT (chính xác) HOẶC Tên (chính xác)
+     * @param query SĐT hoặc Tên
+     * @return Customer nếu tìm thấy, null nếu không
+     */
+    @SuppressLint("Range")
+    public Customer findCustomer(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Thử tìm bằng SĐT hoặc Tên (tìm chính xác)
+        Cursor c = db.rawQuery("SELECT * FROM customers WHERE phone = ? OR name = ? LIMIT 1",
+                new String[]{query, query});
+
+        Customer customer = null;
+
+        if (c.moveToFirst()) {
+            customer = new Customer(); // Giả sử bạn có constructor rỗng
+            customer.setPhone(c.getString(c.getColumnIndexOrThrow("phone")));
+            customer.setName(c.getString(c.getColumnIndexOrThrow("name")));
+            customer.setPoints(c.getInt(c.getColumnIndexOrThrow("points")));
+            customer.setCreatedAt(c.getString(c.getColumnIndexOrThrow("createdAt")));
+            customer.setUpdatedAt(c.getString(c.getColumnIndexOrThrow("updatedAt")));
+        }
+
+        c.close();
+        db.close();
+        return customer; // Sẽ trả về null nếu không tìm thấy
+    }
 }
