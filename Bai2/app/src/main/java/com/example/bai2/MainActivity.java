@@ -47,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, AddCustomerActivity.class));
         });
 
+        // Tìm nút "Tìm" và gán sự kiện
+        FloatingActionButton btnFind = findViewById(R.id.btnFind);
+        btnFind.setOnClickListener(v -> {
+            // Mở Activity Tìm kiếm
+            Intent intent = new Intent(this, FindCustomerActivity.class);
+            startActivity(intent);
+        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }

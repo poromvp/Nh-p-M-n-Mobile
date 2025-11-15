@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Bai2</string>
+    <string name="kh_ch_h_ng_th_n_thi_t">Khách Hàng Thân Thiết</string>
+    <string name="email">Email</string>
+    <string name="demo_email_com">demo@email.com</string>
+    <string name="m_t_kh_u">Mật khẩu</string>
+    <string name="_123456">123456</string>
+    <string name="ng_nh_p">Đăng nhập</string>
+    <string name="todo">TODO</string>
+    <string name="quay_l_i">Quay lại</string>
+    <string name="tr_i_m">➖ Trừ điểm</string>
+    <string name="c_ng_i_m">➕ Cộng điểm</string>
+    <string name="nh_p_s_i_m_mu_n_c_ng_ho_c_tr">Nhập số điểm muốn cộng hoặc trừ</string>
+    <string name="i_m_hi_n_t_i_0">Điểm hiện tại: 0</string>
+    <string name="t_n_kh_ch_h_ng">Tên khách hàng:</string>
+    <string name="t_m_kh_ch_h_ng">Tìm khách hàng</string>
+    <string name="nh_p_s_i_n_tho_i">Nhập số điện thoại</string>
 </resources>
