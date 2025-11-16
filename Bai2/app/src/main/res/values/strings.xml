@@ -15,4 +15,6 @@
     <string name="t_n_kh_ch_h_ng">Tên khách hàng:</string>
     <string name="t_m_kh_ch_h_ng">Tìm khách hàng</string>
     <string name="nh_p_s_i_n_tho_i">Nhập số điện thoại</string>
+    <string name="export_v_g_i_email">Export và Gửi Email</string>
+    <string name="import_t_xml">Import từ XML</string>
 </resources>

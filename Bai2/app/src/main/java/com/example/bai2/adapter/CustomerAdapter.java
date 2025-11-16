@@ -25,13 +25,12 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     private final Context context;
     private final List<Customer> customers;
 
-    //THÊM BIẾN DATABASEHELPER
     private final DatabaseHelper db;
 
     public CustomerAdapter(Context context, List<Customer> customers, DatabaseHelper db) {
         this.context = context;
         this.customers = customers;
-        this.db = db; // <-- Gán DB
+        this.db = db; //
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,7 +74,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         h.tvCreatedAt.setText("Tạo: " + (c.getCreatedAt() != null ? c.getCreatedAt() : "N/A"));
         h.tvUpdatedAt.setText("Cập nhật: " + (c.getUpdatedAt() != null ? c.getUpdatedAt() : "N/A"));
 
-        // (Code nhấn để SỬA của bạn)
+        // Code nhấn để sửa
         h.card.setOnClickListener(v -> {
             Intent intent = new Intent(context, UpdatePointsActivity.class);
             intent.putExtra("CUSTOMER_PHONE", c.getPhone());
@@ -95,19 +94,19 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
                         .setMessage("Bạn có chắc muốn xóa khách hàng: " + c.getName() + "?")
                         .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // 1. Gọi hàm xóa khỏi Database
+                                // Gọi hàm xóa khỏi Database
                                 db.deleteCustomer(c.getPhone());
 
-                                // 2. Xóa khỏi danh sách (List) trong Adapter
+                                // Xóa khỏi danh sách (List) trong Adapter
                                 customers.remove(currentPosition);
 
-                                // 3. Báo cho RecyclerView biết item đã bị xóa
+                                // Báo cho RecyclerView biết item đã bị xóa
                                 notifyItemRemoved(currentPosition);
 
                                 Toast.makeText(context, "Đã xóa khách hàng: " + c.getName(), Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setNegativeButton("Hủy", null) // Nút "Hủy" không làm gì cả
+                        .setNegativeButton("Hủy", null) // Nút hủy không làm gì cả
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
 
