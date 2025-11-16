@@ -113,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 v.put("createdAt", c.getCreatedAt());
                 v.put("updatedAt", c.getUpdatedAt());
 
-                // Hàm này sẽ TỰ ĐỘNG thay thế (REPLACE) nếu "phone" đã tồn tại
+                // Hàm này sẽ tự động thay thế (REPLACE) nếu phone đã tồn tại
                 db.insertWithOnConflict("customers", null, v, SQLiteDatabase.CONFLICT_REPLACE);
             }
             db.setTransactionSuccessful(); // Đánh dấu là thành công

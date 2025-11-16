@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/menu_import"
-        android:title="Import từ XML"
+        android:title="@string/import_t_xml"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_export"
-        android:title="Export và Gửi Email"
+        android:title="@string/export_v_g_i_email"
         app:showAsAction="never" />
 </menu>

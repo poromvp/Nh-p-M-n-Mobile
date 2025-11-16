@@ -1,4 +1,4 @@
-package com.example.bai2.utils; // (Package của bạn)
+package com.example.bai2.utils;
 
 import android.content.Context;
 import android.os.Environment;
@@ -12,8 +12,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class XmlUtils {
 
@@ -27,56 +30,50 @@ public class XmlUtils {
     private static final String TAG_UPDATED_AT = "updatedAt";
 
     /**
-     * HÀM NÀY BÂY GIỜ ĐÃ ĐẦY ĐỦ LOGIC
-     * Ghi danh sách Customer ra file XML trong thư mục Downloads/Bai2
-     * @param context Context
-     * @param customers Danh sách khách hàng
-     * @return File XML đã được ghi, hoặc null nếu lỗi
+     * Ghi file XML ra thư mục .../files/Download/Bai2/
      */
     public static File writeXmlToDownloads(Context context, List<Customer> customers) {
         try {
-            // 1. Lấy thư mục Downloads bên ngoài (nhưng vẫn của riêng app)
+            // Lấy thư mục (Download không có 's' là đúng theo Logcat của bạn)
             File baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-
-            // 2. Tạo thư mục con "Bai2" (giống ý bạn)
             File appDir = new File(baseDir, "Bai2");
             if (!appDir.exists()) {
                 appDir.mkdirs();
             }
 
-            // 3. Tạo file trong thư mục đó
-            File file = new File(appDir, "customers_export.xml");
+            // Tạo timestamp (ví dụ: 20251116_105900)
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            String timestamp = sdf.format(new Date());
 
-            // 4. (CODE ĐÃ ĐƯỢC THÊM LẠI)
-            // Tạo String XML
+            // Tạo tên file duy nhất
+            String fileName = "customers_export_" + timestamp + ".xml";
+
+            // Tạo file với tên duy nhất
+            File file = new File(appDir, "customers_export_2.xml");
+
+            // Toàn bộ code ghi XML
             StringWriter stringWriter = new StringWriter();
             XmlSerializer serializer = Xml.newSerializer();
             serializer.setOutput(stringWriter);
 
-            // Bắt đầu tài liệu
             serializer.startDocument("UTF-8", true);
             serializer.startTag(null, TAG_CUSTOMERS);
 
-            // Lặp qua từng khách hàng
             for (Customer c : customers) {
                 serializer.startTag(null, TAG_CUSTOMER);
-
                 writeXmlTag(serializer, TAG_PHONE, c.getPhone());
                 writeXmlTag(serializer, TAG_NAME, c.getName());
                 writeXmlTag(serializer, TAG_POINTS, String.valueOf(c.getPoints()));
                 writeXmlTag(serializer, TAG_CREATED_AT, c.getCreatedAt());
                 writeXmlTag(serializer, TAG_UPDATED_AT, c.getUpdatedAt());
-
                 serializer.endTag(null, TAG_CUSTOMER);
             }
 
             serializer.endTag(null, TAG_CUSTOMERS);
-            serializer.endDocument(); // Kết thúc tài liệu
+            serializer.endDocument();
 
-            // 5. (CODE ĐÃ ĐƯỢC THÊM LẠI)
-            // Ghi String vào file
             FileOutputStream fos = new FileOutputStream(file);
-            fos.write(stringWriter.toString().getBytes()); // Bây giờ stringWriter đã có dữ liệu
+            fos.write(stringWriter.toString().getBytes());
             fos.close();
 
             Log.d(TAG, "XML file written successfully to: " + file.getAbsolutePath());
@@ -90,7 +87,6 @@ public class XmlUtils {
 
     /**
      * Đọc file XML từ một FileInputStream (để Import)
-     * (Hàm này giữ nguyên, không thay đổi)
      */
     public static List<Customer> parseCustomersXml(FileInputStream inputStream) {
         List<Customer> customers = new ArrayList<>();
@@ -111,11 +107,9 @@ public class XmlUtils {
                             currentCustomer = new Customer();
                         }
                         break;
-
                     case XmlPullParser.TEXT:
                         text = parser.getText();
                         break;
-
                     case XmlPullParser.END_TAG:
                         if (currentCustomer != null) {
                             if (tagName.equalsIgnoreCase(TAG_CUSTOMER)) {
@@ -144,15 +138,15 @@ public class XmlUtils {
                 if (inputStream != null) inputStream.close();
             } catch (Exception e) { e.printStackTrace(); }
         }
-
         Log.d(TAG, "Parsed " + customers.size() + " customers from XML");
         return customers;
     }
 
-
-    // Hàm tiện ích (Giữ nguyên)
+    /**
+     * Hàm tiện ích (Hàm này cũng có thể bị lỗi)
+     */
     private static void writeXmlTag(XmlSerializer serializer, String tagName, String text) throws Exception {
-        if (text == null) text = ""; // Tránh lỗi NullPointerException
+        if (text == null) text = "";
         serializer.startTag(null, tagName);
         serializer.text(text);
         serializer.endTag(null, tagName);

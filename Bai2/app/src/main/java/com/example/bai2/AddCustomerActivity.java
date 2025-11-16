@@ -37,7 +37,7 @@ public class AddCustomerActivity extends AppCompatActivity {
                 return;
             }
 
-            // 4. Chuyển điểm từ chữ sang số (mặc định là 0 nếu không nhập)
+            // Chuyển điểm từ chữ sang số, mặc định là 0 nếu không nhập
             int points = 0;
             if (!TextUtils.isEmpty(pointsStr)) {
                 points = Integer.parseInt(pointsStr);
